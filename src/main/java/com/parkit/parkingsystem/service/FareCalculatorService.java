@@ -17,13 +17,22 @@ public class FareCalculatorService {
         //Convert milliseconds to hours , using double ,to have hour fractions if exist
         double duration = ((double) outHour - (double) inHour) / 3600000;
 
+        //If Duration mor than 30 for car and bike Minutes then will calculate price
         switch (ticket.getParkingSpot().getParkingType()) {
             case CAR: {
-                ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
+                if (duration > Fare.CarFreeDurationParMinutes) {
+                    ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
+                } else {
+                    ticket.setPrice(0);
+                }
                 break;
             }
             case BIKE: {
-                ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);
+                if (duration > Fare.BikeFreeDurationParMinutes) {
+                    ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);
+                } else {
+                    ticket.setPrice(0);
+                }
                 break;
             }
             default:
