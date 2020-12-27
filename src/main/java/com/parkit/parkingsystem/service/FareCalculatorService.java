@@ -20,7 +20,7 @@ public class FareCalculatorService {
         //If Duration mor than 30 for car and bike Minutes then will calculate price
         switch (ticket.getParkingSpot().getParkingType()) {
             case CAR: {
-                if (duration > Fare.CarFreeDurationParMinutes) {
+                if (duration > Fare.CarFreeDurationParHour) {
                     ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
                 } else {
                     ticket.setPrice(0);
@@ -28,7 +28,7 @@ public class FareCalculatorService {
                 break;
             }
             case BIKE: {
-                if (duration > Fare.BikeFreeDurationParMinutes) {
+                if (duration > Fare.BikeFreeDurationParHour) {
                     ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);
                 } else {
                     ticket.setPrice(0);
