@@ -5,18 +5,28 @@ import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
+import com.parkit.parkingsystem.service.ParkingService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
+@ExtendWith(MockitoExtension.class)
 public class FareCalculatorServiceTest {
 
     private static FareCalculatorService fareCalculatorService;
     private Ticket ticket;
+
+    @Mock
+    ParkingService parkingServiceMock;
 
     @BeforeAll
     private static void setUp() {
@@ -149,5 +159,51 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
         assertEquals((0), ticket.getPrice());
+    }
+
+    /**
+     * Test fare after discounting for Bick
+     */
+    @Test
+    public void fivePerCentDiscountCalculateFeesForBikeWithPreviseParking() {
+        //given
+        when(parkingServiceMock.checkForPreviousTickets(anyString())).thenReturn(true);
+
+        Date outTime = new Date();
+        Date inTime = new Date();
+        inTime.setTime(outTime.getTime() - (60 * 60 * 1000));//60 Minutes parking time
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        //when
+        fareCalculatorService.calculateFare(ticket);
+
+        //then
+        assertEquals((Fare.CAR_DISCOUNT_FOR_MORE_THAN_ONE_PREVIOUSLY_PARKING * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice());
+    }
+
+    /**
+     * Test fare after discounting for Car
+     */
+    @Test
+    public void fivePerCentDiscountCalculateFeesForCarWithPreviseParking() {
+        //given
+        when(parkingServiceMock.checkForPreviousTickets(anyString())).thenReturn(true);
+
+        Date outTime = new Date();
+        Date inTime = new Date();
+        inTime.setTime(outTime.getTime() - (60 * 60 * 1000));//60 Minutes parking time
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        //when
+        fareCalculatorService.calculateFare(ticket);
+
+        //then
+        assertEquals((Fare.BIKE_DISCOUNT_FOR_MORE_THAN_ONE_PREVIOUSLY_PARKING * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
     }
 }

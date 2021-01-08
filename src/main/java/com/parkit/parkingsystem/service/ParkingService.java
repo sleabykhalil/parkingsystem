@@ -117,4 +117,13 @@ public class ParkingService {
             logger.error("Unable to process exiting vehicle",e);
         }
     }
+
+    /**
+     * Check if there are previous Tickets for specific vehicle
+     * @param vehicleRegNumber
+     * @return
+     */
+    public Boolean checkForPreviousTickets(String vehicleRegNumber){
+
+    }
 }

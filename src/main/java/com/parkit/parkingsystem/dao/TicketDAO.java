@@ -86,4 +86,12 @@ public class TicketDAO {
         }
         return false;
     }
+
+    /**
+     * Get sum of previous tickets for specific vehicle from database
+     * @param vehicleRegNumber
+     * @return the sum as integer
+     */
+    public int getSumOfpreviousTeckits(String vehicleRegNumber) {
+    }
 }
