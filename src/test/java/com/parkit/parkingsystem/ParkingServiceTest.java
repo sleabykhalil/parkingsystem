@@ -64,7 +64,7 @@ public class ParkingServiceTest {
      */
     @Test
     public void checkForPreviousTicketsTest(String vehicleRegNumber){
-        when(ticketDAO.getSumOfpreviousTeckits("ABCDEF")).thenReturn(1);
+        when(ticketDAO.getSumOfPreviousTickets("ABCDEF")).thenReturn(1);
         assertTrue(parkingService.checkForPreviousTickets("ABCDEF"));
     }
 
