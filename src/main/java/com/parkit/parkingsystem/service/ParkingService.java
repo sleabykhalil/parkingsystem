@@ -105,7 +105,7 @@ public class ParkingService {
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
             Date outTime = new Date();
             ticket.setOutTime(outTime);
-            fareCalculatorService.calculateFare(ticket);
+            fareCalculatorService.calculateFare(ticket,checkForPreviousTickets(vehicleRegNumber));
             if(ticketDAO.updateTicket(ticket)) {
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
                 parkingSpot.setAvailable(true);
@@ -122,13 +122,13 @@ public class ParkingService {
 
     /**
      * Check if there are previous Tickets for specific vehicle
-     * @param vehicleRegNumber
-     * @return
+     * @param vehicleRegNumber car or bike
+     * @return true if one at last exist
      */
-    public Boolean checkForPreviousTickets(String vehicleRegNumber){
-        if(ticketDAO.getSumOfPreviousTickets(vehicleRegNumber)>0 )
-            return true;
-        else
-            return false;
+    public  Boolean checkForPreviousTickets(String vehicleRegNumber){
+        /* sum > 1 because we saved before checking the sum in the database at entering
+           and after that it uses at exiting
+        */
+        return ticketDAO.getSumOfPreviousTickets(vehicleRegNumber) > 1;
     }
 }
