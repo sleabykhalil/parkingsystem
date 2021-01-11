@@ -129,6 +129,6 @@ public class ParkingService {
         /* sum > 1 because we saved before checking the sum in the database at entering
            and after that it uses at exiting
         */
-        return ticketDAO.getSumOfPreviousTickets(vehicleRegNumber) > 1;
+        return ticketDAO.getCountOfPreviousTickets(vehicleRegNumber) > 1;
     }
 }

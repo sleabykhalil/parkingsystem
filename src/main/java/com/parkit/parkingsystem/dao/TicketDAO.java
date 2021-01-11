@@ -93,12 +93,12 @@ public class TicketDAO {
      * @param vehicleRegNumber
      * @return the sum as integer
      */
-    public int getSumOfPreviousTickets(String vehicleRegNumber) {
+    public int getCountOfPreviousTickets(String vehicleRegNumber) {
         Connection con = null;
         int sumOfPreviousTickets = 0;
         try {
             con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_SUM_OF_PREVIOUS_TICKETS);
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_COUNT_OF_PREVIOUS_TICKETS);
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
             ps.setString(1, vehicleRegNumber);
             ResultSet rs = ps.executeQuery();

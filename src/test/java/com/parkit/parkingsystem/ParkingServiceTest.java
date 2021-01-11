@@ -64,7 +64,7 @@ public class ParkingServiceTest {
      */
     @Test
     public void checkForPreviousTicketsTest(){
-        when(ticketDAO.getSumOfPreviousTickets("ABCDEF")).thenReturn(2);//2 because the system save in DB before check
+        when(ticketDAO.getCountOfPreviousTickets("ABCDEF")).thenReturn(2);//2 because the system save in DB before check
         assertTrue(parkingService.checkForPreviousTickets("ABCDEF"));
     }
 
