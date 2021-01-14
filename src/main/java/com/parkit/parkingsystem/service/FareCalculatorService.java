@@ -46,4 +46,7 @@ public class FareCalculatorService {
                 throw new IllegalArgumentException("Unkown Parking Type");
         }
     }
+
+    public Double gitDiscount(String vehicleRegNumber) {
+    }
 }

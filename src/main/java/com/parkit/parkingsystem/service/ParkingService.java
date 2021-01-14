@@ -131,4 +131,7 @@ public class ParkingService {
         */
         return ticketDAO.getCountOfPreviousTickets(vehicleRegNumber) > 1;
     }
+
+    public void displayDiscountMessage(String vehicleRegNumber) {
+    }
 }

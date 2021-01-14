@@ -2,17 +2,20 @@ package com.parkit.parkingsystem;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 import com.parkit.parkingsystem.service.ParkingService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -27,6 +30,8 @@ public class FareCalculatorServiceTest {
     private Boolean discount;
     @Mock
     ParkingService parkingServiceMock;
+    @Mock
+    private static TicketDAO ticketDAO;
 
     @BeforeAll
     private static void setUp() {
@@ -208,5 +213,20 @@ public class FareCalculatorServiceTest {
 
         //then
         assertEquals((Fare.BIKE_DISCOUNT_FOR_MORE_THAN_ONE_PREVIOUSLY_PARKING * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
+    }
+    /**
+     * Test if there are previous tickets
+     * if there are previous tickets then the discount will be adapt
+     * @throws Exception
+     */
+    @Test
+    @Disabled("Test if there are previous tickets to display discount message")
+    public void givenFindPreviousParkTicket_whenDisplayDiscountMessage_thenDiscountMessageReturn() throws Exception {
+        //given
+        when(ticketDAO.getPreviousTicketCount("ABCD")).thenReturn(2);
+        //when
+        Double discount = fareCalculatorService.gitDiscount("ABCD");
+        //then
+        assertThat(discount).isEqualTo(Fare.BIKE_DISCOUNT_FOR_MORE_THAN_ONE_PREVIOUSLY_PARKING);
     }
 }

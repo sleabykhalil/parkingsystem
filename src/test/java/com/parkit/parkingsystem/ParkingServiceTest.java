@@ -8,13 +8,16 @@ import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.Date;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -60,12 +63,26 @@ public class ParkingServiceTest {
 
     /**
      * Test check if there are previous tickets for specific vehicle
-     *
      */
     @Test
-    public void checkForPreviousTicketsTest(){
+    public void checkForPreviousTicketsTest() {
         when(ticketDAO.getCountOfPreviousTickets("ABCDEF")).thenReturn(2);//2 because the system save in DB before check
         assertTrue(parkingService.checkForPreviousTickets("ABCDEF"));
     }
 
+    /**
+     * Test if there are previous tickets
+     * if there are previous tickets to display discount message
+     * @throws Exception
+     */
+    @Test
+    @Disabled("Test if there are previous tickets to display discount message")
+    public void givenFindPreviousParkTicket_whenDisplayDiscountMessage_thenDiscountMessageReturn() throws Exception {
+        //given
+        when(ticketDAO.getPreviousTicketCount("ABCD")).thenReturn(2);
+        //when
+        parkingService.displayDiscountMessage("ABCD");
+        //then
+        verify(ticketDAO,Mockito.times(1)).getPreviousTicketCount(anyString());
+    }
 }

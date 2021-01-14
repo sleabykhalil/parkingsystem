@@ -114,4 +114,7 @@ public class TicketDAO {
             return sumOfPreviousTickets;
         }
     }
+
+    public int getPreviousTicketCount(String vehicleRegNumber) {
+    }
 }
