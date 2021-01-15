@@ -5,10 +5,10 @@ import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
+import com.parkit.parkingsystem.service.FareCalculatorService;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -17,8 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +30,7 @@ public class ParkingServiceTest {
     private static ParkingSpotDAO parkingSpotDAO;
     @Mock
     private static TicketDAO ticketDAO;
+
 
     @BeforeEach
     private void setUpPerTest() {
@@ -57,18 +56,11 @@ public class ParkingServiceTest {
 
     @Test
     public void processExitingVehicleTest() {
+
         parkingService.processExitingVehicle();
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
     }
 
-    /**
-     * Test check if there are previous tickets for specific vehicle
-     */
-    @Test
-    public void checkForPreviousTicketsTest() {
-        when(ticketDAO.getCountOfPreviousTickets("ABCDEF")).thenReturn(2);//2 because the system save in DB before check
-        assertTrue(parkingService.checkForPreviousTickets("ABCDEF"));
-    }
 
     /**
      * Test if there are previous tickets
@@ -76,7 +68,6 @@ public class ParkingServiceTest {
      * @throws Exception
      */
     @Test
-    @Disabled("Test if there are previous tickets to display discount message")
     public void givenFindPreviousParkTicket_whenDisplayDiscountMessage_thenDiscountMessageReturn() throws Exception {
         //given
         when(ticketDAO.getPreviousTicketCount("ABCD")).thenReturn(2);

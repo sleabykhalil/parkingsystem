@@ -62,7 +62,7 @@ public class ParkingDataBaseIT {
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle();
         //TODO: check that a ticket is actualy saved in DB and Parking table is updated with availability
-        int numberOfTicketsFromDataBase = ticketDAO.getCountOfPreviousTickets(inputReaderUtil.readVehicleRegistrationNumber());
+        int numberOfTicketsFromDataBase = ticketDAO.getPreviousTicketCount(inputReaderUtil.readVehicleRegistrationNumber());
         assertEquals(1, numberOfTicketsFromDataBase);
     }
 

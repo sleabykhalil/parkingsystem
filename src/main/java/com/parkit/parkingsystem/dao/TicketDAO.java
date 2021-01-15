@@ -93,28 +93,31 @@ public class TicketDAO {
      * @param vehicleRegNumber
      * @return the sum as integer
      */
-    public int getCountOfPreviousTickets(String vehicleRegNumber) {
-        Connection con = null;
-        int sumOfPreviousTickets = 0;
-        try {
-            con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_COUNT_OF_PREVIOUS_TICKETS);
-            //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-            ps.setString(1, vehicleRegNumber);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                sumOfPreviousTickets = rs.getInt(1);
+
+    public int getPreviousTicketCount(String vehicleRegNumber) {
+        if (vehicleRegNumber != null ) {
+            Connection con = null;
+            int sumOfPreviousTickets = 0;
+            try {
+                con = dataBaseConfig.getConnection();
+                PreparedStatement ps = con.prepareStatement(DBConstants.GET_COUNT_OF_PREVIOUS_TICKETS);
+                //VEHICLE_REG_NUMBER
+                ps.setString(1, vehicleRegNumber);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    sumOfPreviousTickets = rs.getInt(1);
+                }
+                dataBaseConfig.closeResultSet(rs);
+                dataBaseConfig.closePreparedStatement(ps);
+            } catch (Exception ex) {
+                logger.error("Error fetching next available slot", ex);
+            } finally {
+                dataBaseConfig.closeConnection(con);
+                return sumOfPreviousTickets;
             }
-            dataBaseConfig.closeResultSet(rs);
-            dataBaseConfig.closePreparedStatement(ps);
-        } catch (Exception ex) {
-            logger.error("Error fetching next available slot", ex);
-        } finally {
-            dataBaseConfig.closeConnection(con);
-            return sumOfPreviousTickets;
+        } else {
+            return 0;
         }
     }
 
-    public int getPreviousTicketCount(String vehicleRegNumber) {
-    }
 }
