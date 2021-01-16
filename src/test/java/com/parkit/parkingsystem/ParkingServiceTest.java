@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -57,14 +58,18 @@ public class ParkingServiceTest {
     @Test
     public void processExitingVehicleTest() {
 
-        parkingService.processExitingVehicle();
-        verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
+        try (MockedStatic<FareCalculatorService> fareCalculatorServiceMockedStatic = Mockito.mockStatic(FareCalculatorService.class)) {
+            fareCalculatorServiceMockedStatic.when(()->{FareCalculatorService.getDiscount()})
+            parkingService.processExitingVehicle();
+            verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
+        }
     }
 
 
     /**
      * Test if there are previous tickets
      * if there are previous tickets to display discount message
+     *
      * @throws Exception
      */
     @Test
@@ -74,6 +79,6 @@ public class ParkingServiceTest {
         //when
         parkingService.displayDiscountMessage("ABCD");
         //then
-        verify(ticketDAO,Mockito.times(1)).getPreviousTicketCount(anyString());
+        verify(ticketDAO, Mockito.times(1)).getPreviousTicketCount(anyString());
     }
 }

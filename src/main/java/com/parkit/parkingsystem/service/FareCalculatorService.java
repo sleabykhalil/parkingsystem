@@ -28,7 +28,7 @@ public class FareCalculatorService {
             case CAR: {
                 if (duration > Fare.CAR_FREE_DURATION_PAR_HOUR) {
                     ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR -
-                            (duration * Fare.CAR_RATE_PER_HOUR * gitDiscount(ticket.getVehicleRegNumber())));
+                            (duration * Fare.CAR_RATE_PER_HOUR * getDiscount(ticket.getVehicleRegNumber())));
 
                 } else {
                     ticket.setPrice(0);
@@ -38,18 +38,18 @@ public class FareCalculatorService {
             case BIKE: {
                 if (duration > Fare.BIKE_FREE_DURATION_PAR_HOUR) {
                     ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR -
-                            (duration * Fare.BIKE_RATE_PER_HOUR * gitDiscount(ticket.getVehicleRegNumber())));
+                            (duration * Fare.BIKE_RATE_PER_HOUR * getDiscount(ticket.getVehicleRegNumber())));
                 } else {
                     ticket.setPrice(0);
                 }
                 break;
             }
             default:
-                throw new IllegalArgumentException("Unkown Parking Type");
+                throw new IllegalArgumentException("Unknown Parking Type");
         }
     }
 
-    public Double gitDiscount(String vehicleRegNumber) {
+    public Double getDiscount(String vehicleRegNumber) {
         int previousTicketCount = ticketDAO.getPreviousTicketCount(vehicleRegNumber);
         if (previousTicketCount > 1) {
             return Fare.DISCOUNT_FOR_MORE_THAN_ONE_PREVIOUSLY_PARKING;

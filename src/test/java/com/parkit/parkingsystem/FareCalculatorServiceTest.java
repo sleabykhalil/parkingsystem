@@ -6,7 +6,6 @@ import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
-import com.parkit.parkingsystem.service.ParkingService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -225,7 +224,7 @@ public class FareCalculatorServiceTest {
         //given
         when(ticketDAOMock.getPreviousTicketCount("ABCD")).thenReturn(2);
         //when
-        Double discount = fareCalculatorService.gitDiscount("ABCD");
+        Double discount = fareCalculatorService.getDiscount("ABCD");
         //then
         assertThat(discount).isEqualTo(Fare.DISCOUNT_FOR_MORE_THAN_ONE_PREVIOUSLY_PARKING);
     }
