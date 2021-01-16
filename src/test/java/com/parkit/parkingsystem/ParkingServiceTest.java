@@ -60,6 +60,7 @@ public class ParkingServiceTest {
     }
 
 
+
     /**
      * Display welcome message with discount if one ticket found in DB
      */

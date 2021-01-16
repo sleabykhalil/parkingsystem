@@ -32,6 +32,8 @@ public class ParkingService {
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
             if(parkingSpot !=null && parkingSpot.getId() > 0){
                 String vehicleRegNumber = getVehichleRegNumber();
+                // display Welcome message and 5% discount if the vehicle found in database
+                displayWelcomeMassageWithDiscount(vehicleRegNumber);
                 parkingSpot.setAvailable(false);
                 parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
 
@@ -48,7 +50,6 @@ public class ParkingService {
                 System.out.println("Generated Ticket and saved in DB");
                 System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
                 System.out.println("Recorded in-time for vehicle number:"+vehicleRegNumber+" is:"+inTime);
-
             }
         }catch(Exception e){
             logger.error("Unable to process incoming vehicle",e);
@@ -120,4 +121,9 @@ public class ParkingService {
     }
 
 
+    public void displayWelcomeMassageWithDiscount(String vehicleRegNumber) {
+        if (ticketDAO.getCountOfPreviousTickets(vehicleRegNumber) > 0){
+            System.out.println("Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount.");
+        }
+    }
 }
