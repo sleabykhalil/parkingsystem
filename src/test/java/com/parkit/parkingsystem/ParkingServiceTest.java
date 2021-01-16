@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -58,14 +59,17 @@ public class ParkingServiceTest {
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
     }
 
+
     /**
-     * Test check if there are previous tickets for specific vehicle
-     *
+     * Display welcome message with discount if one ticket found in DB
      */
     @Test
-    public void checkForPreviousTicketsTest(){
-        when(ticketDAO.getCountOfPreviousTickets("ABCDEF")).thenReturn(2);//2 because the system save in DB before check
-        assertTrue(parkingService.checkForPreviousTickets("ABCDEF"));
+    public void displayWelcomeMassageWithDiscountWhenPreviousEnteringExistTest() {
+        //given
+        when(ticketDAO.getCountOfPreviousTickets("ABCDEF")).thenReturn(1);//2 because the system save in DB before check
+        //when
+        parkingService.displayWelcomeMassageWithDiscount("ABCDEF");
+        //then
+        verify(ticketDAO, Mockito.times(1)).getCountOfPreviousTickets(anyString());
     }
-
 }
