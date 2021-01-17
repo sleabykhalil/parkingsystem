@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sun.jvm.hotspot.code.Location;
 
 import java.util.Date;
 
@@ -65,12 +66,27 @@ public class ParkingServiceTest {
      * Display welcome message with discount if one ticket found in DB
      */
     @Test
-    public void displayWelcomeMassageWithDiscountWhenPreviousEnteringExistTest() {
+    public void displayWelcomeMassageWithDiscountWhenPreviousEnteringExistShouldCallCountPreviousTicketTest() {
         //given
-        when(ticketDAO.getCountOfPreviousTickets("ABCDEF")).thenReturn(1);//2 because the system save in DB before check
+        when(ticketDAO.getCountOfPreviousTickets("ABCDEF")).thenReturn(1);//1 ticket found in DB
         //when
         parkingService.displayWelcomeMassageWithDiscount("ABCDEF");
         //then
         verify(ticketDAO, Mockito.times(1)).getCountOfPreviousTickets(anyString());
+    }
+
+    @Test
+    public void applyDiscountWhenPreviousEnteringExistShouldUpdatePriceTest(){
+        //given
+
+        //return 2 because the system already save the ticket on DB when the vehicle entered
+        when(ticketDAO.getCountOfPreviousTickets("ABCDEF")).thenReturn(2);
+
+        //when
+        parkingService.applayDiscount(any(Ticket.class));
+
+        //then
+        verify(ticketDAO, Mockito.times(1)).getCountOfPreviousTickets(anyString());
+        verify(ticketDAO, Mockito.times(1)).updateTicket(any(Ticket.class));
     }
 }
