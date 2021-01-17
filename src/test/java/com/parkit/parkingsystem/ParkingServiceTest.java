@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,29 +34,60 @@ public class ParkingServiceTest {
     @BeforeEach
     private void setUpPerTest() {
         try {
-            when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+            lenient().when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
 
-            ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+            ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
             Ticket ticket = new Ticket();
-            ticket.setInTime(new Date(System.currentTimeMillis() - (60*60*1000)));
+            ticket.setInTime(new Date(System.currentTimeMillis() - (60 * 60 * 1000)));
             ticket.setParkingSpot(parkingSpot);
             ticket.setVehicleRegNumber("ABCDEF");
-            when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
-            when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
+            lenient().when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
+            lenient().when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
 
-            when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
+            lenient().when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
 
             parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         } catch (Exception e) {
             e.printStackTrace();
-            throw  new RuntimeException("Failed to set up test mock objects");
+            throw new RuntimeException("Failed to set up test mock objects");
         }
     }
 
     @Test
-    public void processExitingVehicleTest(){
+    public void processExitingVehicleTest() {
         parkingService.processExitingVehicle();
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
     }
 
+
+
+    /**
+     * Display welcome message with discount if one ticket found in DB
+     */
+    @Test
+    public void displayWelcomeMassageWithDiscountWhenPreviousEnteringExistShouldCallCountPreviousTicketTest() {
+        //given
+        when(ticketDAO.getCountOfPreviousTickets("ABCDEF")).thenReturn(1);//1 ticket found in DB
+        //when
+        parkingService.displayWelcomeMassageWithDiscount("ABCDEF");
+        //then
+        verify(ticketDAO, Mockito.times(1)).getCountOfPreviousTickets(anyString());
+    }
+
+    @Test
+    public void applyDiscountWhenPreviousEnteringExistShouldUpdatePriceTest(){
+        //given
+
+        //return 2 because the system already save the ticket on DB when the vehicle entered
+        when(ticketDAO.getCountOfPreviousTickets(anyString())).thenReturn(2);
+        Ticket ticket = new Ticket();
+        ticket.setVehicleRegNumber("ABCDEF");
+        ticket.setPrice(1.0);
+        //when
+        parkingService.applyDiscount(ticket);
+
+        //then
+        verify(ticketDAO, Mockito.times(1)).getCountOfPreviousTickets(anyString());
+        verify(ticketDAO, Mockito.times(1)).updateTicket(any(Ticket.class));
+    }
 }
