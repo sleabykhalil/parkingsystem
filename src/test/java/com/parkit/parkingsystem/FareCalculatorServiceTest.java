@@ -178,15 +178,15 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
         fareCalculatorService.calculateDiscount(ticket);
-        assertEquals(Fare.CAR_RATE_PER_HOUR - (Fare.CAR_FREE_DURATION_PAR_HOUR * Fare.DISCOUNT_FOR_MORE_THAN_ONE_PREVIOUSLY_PARKING)
-                , ticket.getPrice());
+        double expected = Fare.CAR_RATE_PER_HOUR - (Fare.CAR_RATE_PER_HOUR * Fare.DISCOUNT_FOR_MORE_THAN_ONE_PREVIOUSLY_PARKING);
+        assertEquals( expected , ticket.getPrice());
     }
 
     /**
      * Test if calculation of Discount for one hour parking for Bike
      */
     @Test
-    public void calculateDiscountWhenApplyDiscountForCarParkForOneHourShouldDiscountFivePercent() {
+    public void calculateDiscountWhenApplyDiscountForBikeParkForOneHourShouldDiscountFivePercent() {
         Date inTime = new Date();
         inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
         Date outTime = new Date();

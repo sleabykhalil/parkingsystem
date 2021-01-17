@@ -39,4 +39,9 @@ public class FareCalculatorService {
                 throw new IllegalArgumentException("Unknown Parking Type");
         }
     }
+
+    public void calculateDiscount(Ticket ticket) {
+        double discount = ticket.getPrice() * Fare.DISCOUNT_FOR_MORE_THAN_ONE_PREVIOUSLY_PARKING;
+        ticket.setPrice(ticket.getPrice() - discount);
+    }
 }

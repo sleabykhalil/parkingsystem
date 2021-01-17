@@ -13,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sun.jvm.hotspot.code.Location;
 
 import java.util.Date;
 
@@ -80,10 +79,12 @@ public class ParkingServiceTest {
         //given
 
         //return 2 because the system already save the ticket on DB when the vehicle entered
-        when(ticketDAO.getCountOfPreviousTickets("ABCDEF")).thenReturn(2);
-
+        when(ticketDAO.getCountOfPreviousTickets(anyString())).thenReturn(2);
+        Ticket ticket = new Ticket();
+        ticket.setVehicleRegNumber("ABCDEF");
+        ticket.setPrice(1.0);
         //when
-        parkingService.applayDiscount(any(Ticket.class));
+        parkingService.applyDiscount(ticket);
 
         //then
         verify(ticketDAO, Mockito.times(1)).getCountOfPreviousTickets(anyString());
