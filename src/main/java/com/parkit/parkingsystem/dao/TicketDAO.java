@@ -34,10 +34,13 @@ public class TicketDAO {
             return ps.execute();
         } catch (Exception ex) {
             logger.error("Error fetching next available slot", ex);
+
         } finally {
             dataBaseConfig.closeConnection(con);
-            return false;
+            //must be deleted because of it the function will always return false
+            //return false;
         }
+        return false;
     }
 
     public Ticket getTicket(String vehicleRegNumber) {
