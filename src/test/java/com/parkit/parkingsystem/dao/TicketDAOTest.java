@@ -1,11 +1,9 @@
 package com.parkit.parkingsystem.dao;
 
-import com.mysql.cj.protocol.InternalDate;
 import com.parkit.parkingsystem.config.DataBaseConfig;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
-import org.apache.logging.log4j.core.time.Instant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -17,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.sql.*;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.InstanceOfAssertFactories.DATE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -222,5 +219,32 @@ class TicketDAOTest {
         //verify(preparedStatementMock, times(1)).setTimestamp(2, any(Timestamp.class));
         //verifying try..finally
         verify(dataBaseConfigMock, times(1)).closeConnection(connectionMock);
+    }
+
+    /**
+     * Test get count for previous tickets for vehicle
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
+    @Test
+    void getCountOfPreviousTicketsWhenTicketsFoundShouldReturnNumberOfTickets() throws SQLException, ClassNotFoundException {
+        //given
+        String vehicleRegNumber = "ABCDE";
+        when(preparedStatementMock.executeQuery()).thenReturn(resultSetMock);
+        when(resultSetMock.next()).thenReturn(true);
+        when(resultSetMock.getInt(anyInt())).thenReturn(1);
+        //when
+        int resultTicketCounter;
+        resultTicketCounter=ticketDAOUnderTest.getCountOfPreviousTickets(vehicleRegNumber);
+
+        //then
+        assertThat(resultTicketCounter).isEqualTo(1);
+        verify(dataBaseConfigMock,times(1)).getConnection();
+        verify(preparedStatementMock,times(1)).executeQuery();
+        verify(preparedStatementMock,times(1)).setString(1,"ABCDE");
+        verify(resultSetMock,times(1)).next();
+        verify(resultSetMock,times(1)).getInt(anyInt());
+        verify(dataBaseConfigMock,times(1)).closeConnection(connectionMock);
+        verify(dataBaseConfigMock,times(1)).closePreparedStatement(preparedStatementMock);
     }
 }
