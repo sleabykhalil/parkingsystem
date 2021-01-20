@@ -190,12 +190,13 @@ class TicketDAOTest {
         verify(preparedStatementMock, times(1)).setString(2, "ABCDE");
         verify(preparedStatementMock, times(1)).setDouble(3, 1.5);
         verify(preparedStatementMock, times(2)).setTimestamp(anyInt(), any(Timestamp.class));
-        assertThatExceptionOfType(SQLException.class).isThrownBy(()->preparedStatementMock.execute());
+        assertThatExceptionOfType(SQLException.class).isThrownBy(() -> preparedStatementMock.execute());
         //verifying try..finally
         verify(dataBaseConfigMock, times(1)).closeConnection(connectionMock);
         assertThat(resultSaveTicket).isFalse();
 
     }
+
     @Test
     @Tag("updateTicket")
     public void updateTicketWhenWhenTicketPassedAsArgumentShouldExecuteUpdateQuery() throws SQLException, ClassNotFoundException {
@@ -223,6 +224,7 @@ class TicketDAOTest {
 
     /**
      * Test get count for previous tickets for vehicle
+     *
      * @throws SQLException
      * @throws ClassNotFoundException
      */
@@ -235,16 +237,16 @@ class TicketDAOTest {
         when(resultSetMock.getInt(anyInt())).thenReturn(1);
         //when
         int resultTicketCounter;
-        resultTicketCounter=ticketDAOUnderTest.getCountOfPreviousTickets(vehicleRegNumber);
+        resultTicketCounter = ticketDAOUnderTest.getCountOfPreviousTickets(vehicleRegNumber);
 
         //then
         assertThat(resultTicketCounter).isEqualTo(1);
-        verify(dataBaseConfigMock,times(1)).getConnection();
-        verify(preparedStatementMock,times(1)).executeQuery();
-        verify(preparedStatementMock,times(1)).setString(1,"ABCDE");
-        verify(resultSetMock,times(1)).next();
-        verify(resultSetMock,times(1)).getInt(anyInt());
-        verify(dataBaseConfigMock,times(1)).closeConnection(connectionMock);
-        verify(dataBaseConfigMock,times(1)).closePreparedStatement(preparedStatementMock);
+        verify(dataBaseConfigMock, times(1)).getConnection();
+        verify(preparedStatementMock, times(1)).executeQuery();
+        verify(preparedStatementMock, times(1)).setString(1, "ABCDE");
+        verify(resultSetMock, times(1)).next();
+        verify(resultSetMock, times(1)).getInt(anyInt());
+        verify(dataBaseConfigMock, times(1)).closeConnection(connectionMock);
+        verify(dataBaseConfigMock, times(1)).closePreparedStatement(preparedStatementMock);
     }
 }

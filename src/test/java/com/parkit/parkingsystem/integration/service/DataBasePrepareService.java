@@ -3,7 +3,6 @@ package com.parkit.parkingsystem.integration.service;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public class DataBasePrepareService {
 
@@ -27,14 +26,14 @@ public class DataBasePrepareService {
         }
     }
 
-    public void closeConnection()  {
+    public void closeConnection() {
         Connection connection = null;
-       try {
-           connection = dataBaseTestConfig.getConnection();
-           dataBaseTestConfig.closeConnection(connection);
-       }catch (Exception e){
-           e.printStackTrace();
-       }
+        try {
+            connection = dataBaseTestConfig.getConnection();
+            dataBaseTestConfig.closeConnection(connection);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

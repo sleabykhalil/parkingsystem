@@ -67,7 +67,7 @@ public class ParkingDataBaseIT {
         Date closeToInDate = new Date();
         assertThat(ticketAfterEntering.getId()).isNotZero();
         assertThat(ticketAfterEntering.getVehicleRegNumber()).isEqualTo("ABCDEF");
-        assertThat(ticketAfterEntering.getInTime()).isCloseTo(closeToInDate,1000);
+        assertThat(ticketAfterEntering.getInTime()).isCloseTo(closeToInDate, 1000);
         assertThat(ticketAfterEntering.getOutTime()).isNull();
         assertThat(ticketAfterEntering.getPrice()).isEqualTo(0.0);
 
