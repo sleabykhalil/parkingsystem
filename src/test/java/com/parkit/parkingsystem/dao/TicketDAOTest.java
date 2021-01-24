@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.*;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -205,7 +206,8 @@ class TicketDAOTest {
         Ticket ticket = new Ticket();
         ticket.setId(1);
         ticket.setPrice(1.5);
-        ticket.setOutTime(new Timestamp(System.currentTimeMillis()));
+        Date outDateTime = new Date();
+        ticket.setOutTime(outDateTime);
         when(preparedStatementMock.execute()).thenReturn(true);
 
         //when
@@ -217,7 +219,7 @@ class TicketDAOTest {
         verify(dataBaseConfigMock, times(1)).getConnection();
         verify(preparedStatementMock, times(1)).setInt(3, 1);
         verify(preparedStatementMock, times(1)).setDouble(1, 1.5);
-        //verify(preparedStatementMock, times(1)).setTimestamp(2, any(Timestamp.class));
+        verify(preparedStatementMock, times(1)).setTimestamp(2,new Timestamp(outDateTime.getTime()));
         //verifying try..finally
         verify(dataBaseConfigMock, times(1)).closeConnection(connectionMock);
     }
