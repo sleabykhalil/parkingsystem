@@ -13,11 +13,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-
 import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class FareCalculatorServiceTest {
@@ -68,7 +67,7 @@ public class FareCalculatorServiceTest {
     }
 
     @Test
-    public void calculateFareUnkownType() {
+    public void calculateFareUnknownType() {
         Date inTime = new Date();
         inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
         Date outTime = new Date();
@@ -179,7 +178,7 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket);
         fareCalculatorService.calculateDiscount(ticket);
         double expected = Fare.CAR_RATE_PER_HOUR - (Fare.CAR_RATE_PER_HOUR * Fare.DISCOUNT_FOR_MORE_THAN_ONE_PREVIOUSLY_PARKING);
-        assertEquals( expected , ticket.getPrice());
+        assertEquals(expected, ticket.getPrice());
     }
 
     /**

@@ -34,10 +34,13 @@ public class TicketDAO {
             return ps.execute();
         } catch (Exception ex) {
             logger.error("Error fetching next available slot", ex);
+
         } finally {
             dataBaseConfig.closeConnection(con);
-            return false;
+            //must be deleted because of it the function will always return false
+            //return false;
         }
+        return false;
     }
 
     public Ticket getTicket(String vehicleRegNumber) {
@@ -88,10 +91,10 @@ public class TicketDAO {
     }
 
     /**
-     * Get sum of previous tickets for specific vehicle from database
+     * Get count of previous tickets for specific vehicle from database or zero if not exist
      *
      * @param vehicleRegNumber
-     * @return the sum as integer
+     * @return the count of previous Ticket as integer
      */
     public int getCountOfPreviousTickets(String vehicleRegNumber) {
         Connection con = null;
@@ -99,7 +102,7 @@ public class TicketDAO {
         try {
             con = dataBaseConfig.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_COUNT_OF_PREVIOUS_TICKETS);
-            //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
+            // VEHICLE_REG_NUMBER
             ps.setString(1, vehicleRegNumber);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -108,7 +111,7 @@ public class TicketDAO {
             dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
         } catch (Exception ex) {
-            logger.error("Error fetching next available slot", ex);
+            logger.error("Error fetching tickets count", ex);
         } finally {
             dataBaseConfig.closeConnection(con);
             return sumOfPreviousTickets;

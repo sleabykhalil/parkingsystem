@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,7 +59,6 @@ public class ParkingServiceTest {
     }
 
 
-
     /**
      * Display welcome message with discount if one ticket found in DB
      */
@@ -75,9 +73,8 @@ public class ParkingServiceTest {
     }
 
     @Test
-    public void applyDiscountWhenPreviousEnteringExistShouldUpdatePriceTest(){
+    public void applyDiscountWhenPreviousEnteringExistShouldUpdatePriceTest() {
         //given
-
         //return 2 because the system already save the ticket on DB when the vehicle entered
         when(ticketDAO.getCountOfPreviousTickets(anyString())).thenReturn(2);
         Ticket ticket = new Ticket();
@@ -89,5 +86,21 @@ public class ParkingServiceTest {
         //then
         verify(ticketDAO, Mockito.times(1)).getCountOfPreviousTickets(anyString());
         verify(ticketDAO, Mockito.times(1)).updateTicket(any(Ticket.class));
+    }
+
+    @Test
+    public void processIncomingVehicleWhenParkingSpotAvailableShouldSaveTicket() {
+        //given
+        when(inputReaderUtil.readSelection()).thenReturn(1);
+        when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
+        when(ticketDAO.getCountOfPreviousTickets(anyString())).thenReturn(1);
+        when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
+
+        //when
+        parkingService.processIncomingVehicle();
+
+        //then
+        verify(parkingSpotDAO, times(1)).updateParking(any(ParkingSpot.class));
+        verify(ticketDAO, Mockito.times(1)).saveTicket(any(Ticket.class));
     }
 }

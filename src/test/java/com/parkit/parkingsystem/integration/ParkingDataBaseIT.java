@@ -1,6 +1,7 @@
 package com.parkit.parkingsystem.integration;
 
 import com.parkit.parkingsystem.constants.Fare;
+import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
@@ -62,7 +63,21 @@ public class ParkingDataBaseIT {
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle();
         //TODO: check that a ticket is actualy saved in DB and Parking table is updated with availability
-        int numberOfTicketsFromDataBase = ticketDAO.getCountOfPreviousTickets(inputReaderUtil.readVehicleRegistrationNumber());
+        Ticket ticketAfterEntering = ticketDAO.getTicket("ABCDEF");
+        Date closeToInDate = new Date();
+        assertThat(ticketAfterEntering.getId()).isNotZero();
+        assertThat(ticketAfterEntering.getVehicleRegNumber()).isEqualTo("ABCDEF");
+        assertThat(ticketAfterEntering.getInTime()).isCloseTo(closeToInDate, 1000);
+        assertThat(ticketAfterEntering.getOutTime()).isNull();
+        assertThat(ticketAfterEntering.getPrice()).isEqualTo(0.0);
+
+        //assert that next parking spot id is greater than the Id taken by ticketAfterEntering
+        int minimumParkingSpotID;
+        minimumParkingSpotID = parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR);
+        assertThat(minimumParkingSpotID).isGreaterThan(ticketAfterEntering.getParkingSpot().getId());
+        assertThat(minimumParkingSpotID).isEqualTo(ticketAfterEntering.getParkingSpot().getId() + 1);
+
+        int numberOfTicketsFromDataBase = ticketDAO.getCountOfPreviousTickets("ABCDEF");
         assertEquals(1, numberOfTicketsFromDataBase);
     }
 
@@ -92,9 +107,10 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
         //TODO: check that the fare generated and out time are populated correctly in the database
         Ticket ticketAfterExit = ticketDAO.getTicket(vehicleRegNumber);
-        Date closeToOutDate= new Date();
+        Date closeToOutDate = new Date();
         assertThat(ticketAfterExit.getPrice()).isCloseTo(Fare.CAR_RATE_PER_HOUR, Assertions.withinPercentage(1));
-        assertThat(ticketAfterExit.getOutTime()).isCloseTo(closeToOutDate,10000);
+        assertThat(ticketAfterExit.getOutTime()).isCloseTo(closeToOutDate, 10000);
     }
+
 
 }
