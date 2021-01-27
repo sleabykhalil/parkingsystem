@@ -13,6 +13,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <jmockit.version>1.49</jmockit.version>
+        <!--       <jmockit.version>1.7</jmockit.version> -->
     </properties>
 
     <dependencies>
@@ -31,13 +32,21 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.17</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.jmockit/jmockit -->
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.jmockit/jmockit &ndash;&gt;-->
         <dependency>
             <groupId>org.jmockit</groupId>
             <artifactId>jmockit</artifactId>
             <version>${jmockit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.googlecode.jmockit/jmockit -->
+        <!--        <dependency>
+                    <groupId>com.googlecode.jmockit</groupId>
+                    <artifactId>jmockit</artifactId>
+                    <version>1.7</version>
+                    <scope>test</scope>
+                </dependency>-->
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -88,6 +97,7 @@
             <artifactId>maven-project-info-reports-plugin</artifactId>
             <version>3.1.1</version>
         </dependency>
+
 
     </dependencies>
 
@@ -171,7 +181,8 @@
 
                     <argLine>
                         -javaagent:"${settings.localRepository}"/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
-
+                        <!--                         -javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/1.7/jmockit-1.7.jar-->
+                        <!--  -javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/0.999.15/jmockit-0.999.15.jar-->
 
                     </argLine>
 
@@ -215,6 +226,11 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>*$Impl_*</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
