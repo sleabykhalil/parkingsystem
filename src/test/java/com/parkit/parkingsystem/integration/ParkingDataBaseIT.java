@@ -20,6 +20,7 @@ import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 
@@ -128,5 +129,24 @@ public class ParkingDataBaseIT {
 
     }
 
+    @Test
+    public void testParkingLotExitForTheSameVehicleRegistrationNumberButDefiantTypeTimeShouldReturnGreatestIdIT() throws Exception {
+        //given
+        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        parkingService.processIncomingVehicle();//enter as car
+        when(inputReaderUtil.readSelection()).thenReturn(2);
+        parkingService.processIncomingVehicle();//enter as bike with the same Vehicle Registration Number
+        lenient().when(inputReaderUtil.readSelection()).thenReturn(1);
+
+        String vehicleRegNumber = inputReaderUtil.readVehicleRegistrationNumber();
+
+        //when
+        parkingService.processExitingVehicle();//sort as car
+        Ticket ticketAfterExit = ticketDAO.getTicket(vehicleRegNumber);
+
+        //then
+        assertThat(ticketAfterExit.getId()).isEqualTo(1);
+
+    }
 
 }
