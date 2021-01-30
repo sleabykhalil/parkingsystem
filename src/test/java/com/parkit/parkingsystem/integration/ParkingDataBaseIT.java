@@ -11,10 +11,7 @@ import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -110,6 +107,25 @@ public class ParkingDataBaseIT {
         Date closeToOutDate = new Date();
         assertThat(ticketAfterExit.getPrice()).isCloseTo(Fare.CAR_RATE_PER_HOUR, Assertions.withinPercentage(1));
         assertThat(ticketAfterExit.getOutTime()).isCloseTo(closeToOutDate, 10000);
+    }
+
+    //Test returning last entering for the same vehicle
+    @Test
+    public void testParkingLotExitForTheSecondTimeShouldReturnGreatestIdIT() throws Exception {
+        //given
+        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        parkingService.processIncomingVehicle();
+        parkingService.processExitingVehicle();
+        parkingService.processIncomingVehicle();
+        String vehicleRegNumber = inputReaderUtil.readVehicleRegistrationNumber();
+
+        //when
+        parkingService.processExitingVehicle();
+        Ticket ticketAfterExit = ticketDAO.getTicket(vehicleRegNumber);
+
+        //then
+        assertThat(ticketAfterExit.getId()).isEqualTo(2);
+
     }
 
 
