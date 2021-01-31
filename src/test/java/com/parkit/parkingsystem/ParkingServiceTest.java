@@ -55,6 +55,7 @@ public class ParkingServiceTest {
     @Test
     public void processExitingVehicleTest() {
         parkingService.processExitingVehicle();
+        verify(ticketDAO,Mockito.times(1)).updateTicket(any(Ticket.class));
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
     }
 
@@ -89,10 +90,26 @@ public class ParkingServiceTest {
     }
 
     @Test
-    public void processIncomingVehicleWhenParkingSpotAvailableShouldSaveTicket() {
+    public void processIncomingCarWhenParkingSpotAvailableShouldSaveTicket() {
         //given
         when(inputReaderUtil.readSelection()).thenReturn(1);
         when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
+        when(ticketDAO.getCountOfPreviousTickets(anyString())).thenReturn(1);
+        when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
+
+        //when
+        parkingService.processIncomingVehicle();
+
+        //then
+        verify(parkingSpotDAO, times(1)).updateParking(any(ParkingSpot.class));
+        verify(ticketDAO, Mockito.times(1)).saveTicket(any(Ticket.class));
+    }
+
+    @Test
+    public void processIncomingBikeWhenParkingSpotAvailableShouldSaveTicket() {
+        //given
+        when(inputReaderUtil.readSelection()).thenReturn(2);
+        when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(4);
         when(ticketDAO.getCountOfPreviousTickets(anyString())).thenReturn(1);
         when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
 

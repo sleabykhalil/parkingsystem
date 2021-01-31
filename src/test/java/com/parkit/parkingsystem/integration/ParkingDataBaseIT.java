@@ -11,10 +11,7 @@ import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -23,6 +20,7 @@ import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 
@@ -112,5 +110,43 @@ public class ParkingDataBaseIT {
         assertThat(ticketAfterExit.getOutTime()).isCloseTo(closeToOutDate, 10000);
     }
 
+    //Test returning last entering for the same vehicle
+    @Test
+    public void testParkingLotExitForTheSecondTimeShouldReturnGreatestIdIT() throws Exception {
+        //given
+        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        parkingService.processIncomingVehicle();
+        parkingService.processExitingVehicle();
+        parkingService.processIncomingVehicle();
+        String vehicleRegNumber = inputReaderUtil.readVehicleRegistrationNumber();
+
+        //when
+        parkingService.processExitingVehicle();
+        Ticket ticketAfterExit = ticketDAO.getTicket(vehicleRegNumber);
+
+        //then
+        assertThat(ticketAfterExit.getId()).isEqualTo(2);
+
+    }
+
+    @Test
+    public void testParkingLotExitForTheSameVehicleRegistrationNumberButDefiantTypeTimeShouldReturnGreatestIdIT() throws Exception {
+        //given
+        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        parkingService.processIncomingVehicle();//enter as car
+        when(inputReaderUtil.readSelection()).thenReturn(2);
+        parkingService.processIncomingVehicle();//enter as bike with the same Vehicle Registration Number
+        lenient().when(inputReaderUtil.readSelection()).thenReturn(1);
+
+        String vehicleRegNumber = inputReaderUtil.readVehicleRegistrationNumber();
+
+        //when
+        parkingService.processExitingVehicle();//sort as car
+        Ticket ticketAfterExit = ticketDAO.getTicket(vehicleRegNumber);
+
+        //then
+        assertThat(ticketAfterExit.getId()).isEqualTo(1);
+
+    }
 
 }
