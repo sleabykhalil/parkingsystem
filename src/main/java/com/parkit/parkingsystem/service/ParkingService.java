@@ -11,6 +11,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 
+/**
+ * Business rules
+ */
 public class ParkingService {
 
     private static final Logger logger = LogManager.getLogger("ParkingService");
@@ -27,6 +30,9 @@ public class ParkingService {
         this.ticketDAO = ticketDAO;
     }
 
+    /**
+     * Processing Incoming vehicle
+     */
     public void processIncomingVehicle() {
         try {
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
@@ -56,11 +62,21 @@ public class ParkingService {
         }
     }
 
+    /**
+     * get vehicle registration number from user
+     * @return string
+     * @throws Exception
+     */
     private String getVehicleRegNumber() throws Exception {
         System.out.println("Please type the vehicle registration number and press enter key");
         return inputReaderUtil.readVehicleRegistrationNumber();
     }
 
+    /**
+     * get if there is parking place
+     * @return ParkingSpot object
+     * @see ParkingSpot
+     */
     public ParkingSpot getNextParkingNumberIfAvailable() {
         int parkingNumber = 0;
         ParkingSpot parkingSpot = null;
@@ -80,6 +96,10 @@ public class ParkingService {
         return parkingSpot;
     }
 
+    /**
+     * get vehicle type if car or bike from user
+     * @return ParkingType
+     */
     private ParkingType getVehicleType() {
         System.out.println("Please select vehicle type from menu");
         System.out.println("1 CAR");
@@ -99,6 +119,9 @@ public class ParkingService {
         }
     }
 
+    /**
+     * Processing exiting car
+     */
     public void processExitingVehicle() {
         try {
             String vehicleRegNumber = getVehicleRegNumber();
@@ -118,7 +141,9 @@ public class ParkingService {
                 System.out.println("Unable to update ticket information. Error occurred");
             }
         } catch (Exception e) {
-            logger.error("Unable to process exiting vehicle", e);
+            //logger.error("Unable to process exiting vehicle", e);
+            //see product owner if we want the exception details or not
+            logger.error("Unable to process exiting vehicle");
         }
     }
 

@@ -4,7 +4,11 @@ import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
-
+    /**
+     * Calculate price and set it in the Ticket
+     * @param ticket Ticket object
+     * @see Ticket
+     */
     public void calculateFare(Ticket ticket) {
         if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {
             throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
@@ -40,6 +44,10 @@ public class FareCalculatorService {
         }
     }
 
+    /**
+     * Calculate discount and set price after discount to ticket
+     * @param ticket
+     */
     public void calculateDiscount(Ticket ticket) {
         double discount = ticket.getPrice() * Fare.DISCOUNT_FOR_MORE_THAN_ONE_PREVIOUSLY_PARKING;
         ticket.setPrice(ticket.getPrice() - discount);

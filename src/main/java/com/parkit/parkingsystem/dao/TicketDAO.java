@@ -19,6 +19,12 @@ public class TicketDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    /**
+     * Save Ticket in DataBase
+     * @param ticket Ticket object
+     * @return true if sql statement executed , false if there is a problem
+     * @see Ticket
+     */
     public boolean saveTicket(Ticket ticket) {
         Connection con = null;
         try {
@@ -43,6 +49,12 @@ public class TicketDAO {
         return false;
     }
 
+    /**
+     * Return ticket from  database
+     * @param vehicleRegNumber vehicle registration number
+     * @return Ticket if founded or ticket as null if not
+     * @see Ticket
+     */
     public Ticket getTicket(String vehicleRegNumber) {
         Connection con = null;
         Ticket ticket = null;
@@ -64,14 +76,20 @@ public class TicketDAO {
             }
             dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
+            return ticket;
         } catch (Exception ex) {
             logger.error("Error fetching next available slot", ex);
         } finally {
             dataBaseConfig.closeConnection(con);
-            return ticket;
         }
+        return ticket;
     }
 
+    /**
+     * update Ticket in database by adding price and exiting date
+     * @param ticket Ticket object
+     * @return
+     */
     public boolean updateTicket(Ticket ticket) {
         Connection con = null;
         try {
@@ -93,7 +111,7 @@ public class TicketDAO {
     /**
      * Get count of previous tickets for specific vehicle from database or zero if not exist
      *
-     * @param vehicleRegNumber
+     * @param vehicleRegNumber vehicle registration number
      * @return the count of previous Ticket as integer
      */
     public int getCountOfPreviousTickets(String vehicleRegNumber) {
@@ -110,11 +128,12 @@ public class TicketDAO {
             }
             dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
+            return sumOfPreviousTickets;
         } catch (Exception ex) {
             logger.error("Error fetching tickets count", ex);
         } finally {
             dataBaseConfig.closeConnection(con);
-            return sumOfPreviousTickets;
         }
+        return 0;
     }
 }
