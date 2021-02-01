@@ -6,6 +6,7 @@ import com.parkit.parkingsystem.model.Ticket;
 public class FareCalculatorService {
     /**
      * Calculate price and set it in the Ticket
+     *
      * @param ticket Ticket object
      * @see Ticket
      */
@@ -46,6 +47,7 @@ public class FareCalculatorService {
 
     /**
      * Calculate discount and set price after discount to ticket
+     *
      * @param ticket
      */
     public void calculateDiscount(Ticket ticket) {

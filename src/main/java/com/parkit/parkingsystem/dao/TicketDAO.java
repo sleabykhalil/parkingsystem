@@ -21,6 +21,7 @@ public class TicketDAO {
 
     /**
      * Save Ticket in DataBase
+     *
      * @param ticket Ticket object
      * @return true if sql statement executed , false if there is a problem
      * @see Ticket
@@ -51,6 +52,7 @@ public class TicketDAO {
 
     /**
      * Return ticket from  database
+     *
      * @param vehicleRegNumber vehicle registration number
      * @return Ticket if founded or ticket as null if not
      * @see Ticket
@@ -87,6 +89,7 @@ public class TicketDAO {
 
     /**
      * update Ticket in database by adding price and exiting date
+     *
      * @param ticket Ticket object
      * @return
      */
