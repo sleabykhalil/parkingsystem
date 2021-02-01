@@ -105,7 +105,7 @@ class ParkingSpotDAOTest {
         result = parkingSpotDAOUnderTest.getNextAvailableSlot(ParkingType.valueOf("CAR"));
 
         //then
-        verify(preparedStatementMock,times(1)).executeQuery();
+        verify(preparedStatementMock, times(1)).executeQuery();
         assertThatThrownBy(() -> preparedStatementMock.executeQuery()).isInstanceOf(SQLException.class);
         verify(connectionMock, times(1)).prepareStatement(anyString());
         verify(resultSetMock, times(0)).getInt(1);
