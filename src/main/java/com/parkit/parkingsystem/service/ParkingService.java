@@ -64,6 +64,7 @@ public class ParkingService {
 
     /**
      * get vehicle registration number from user
+     *
      * @return string
      * @throws Exception
      */
@@ -74,6 +75,7 @@ public class ParkingService {
 
     /**
      * get if there is parking place
+     *
      * @return ParkingSpot object
      * @see ParkingSpot
      */
@@ -98,6 +100,7 @@ public class ParkingService {
 
     /**
      * get vehicle type if car or bike from user
+     *
      * @return ParkingType
      */
     private ParkingType getVehicleType() {

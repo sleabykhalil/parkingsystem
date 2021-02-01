@@ -219,7 +219,7 @@ class TicketDAOTest {
         verify(dataBaseConfigMock, times(1)).getConnection();
         verify(preparedStatementMock, times(1)).setInt(3, 1);
         verify(preparedStatementMock, times(1)).setDouble(1, 1.5);
-        verify(preparedStatementMock, times(1)).setTimestamp(2,new Timestamp(outDateTime.getTime()));
+        verify(preparedStatementMock, times(1)).setTimestamp(2, new Timestamp(outDateTime.getTime()));
         //verifying try..finally
         verify(dataBaseConfigMock, times(1)).closeConnection(connectionMock);
     }
